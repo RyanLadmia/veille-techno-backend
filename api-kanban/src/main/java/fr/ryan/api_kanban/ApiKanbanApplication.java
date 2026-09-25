@@ -1,3 +1,4 @@
+// Entry point of the Spring Boot application
 package fr.ryan.api_kanban;
 
 import org.springframework.boot.SpringApplication;
