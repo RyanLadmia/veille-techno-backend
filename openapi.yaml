@@ -264,20 +264,30 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     delete:
-      tags: [Lists, Non finalisé]
-      summary: "[Non finalisé] Supprimer une liste"
-      description: Réservé à l'auteur de la liste.
+      tags: [Lists]
+      summary: Supprimer une liste
+      description: |
+        Réservé à l'auteur de la liste.
+        Les cartes associées sont supprimées en cascade (voir README).
       parameters:
         - $ref: "#/components/parameters/IdParam"
       responses:
         "204":
-          description: Liste supprimée
+          description: Liste (et ses cartes) supprimée
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Liste introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /lists/{listId}/cards:
     get:

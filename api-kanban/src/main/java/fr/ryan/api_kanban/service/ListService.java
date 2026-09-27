@@ -72,6 +72,20 @@ public class ListService {
 		return ListResponse.from(kanbanListRepository.save(list));
 	}
 
+	@Transactional
+	public void deleteList(UUID id) {
+		UUID ownerId = currentUserId();
+		KanbanList list = kanbanListRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("List not found"));
+
+		if (!list.getOwnerId().equals(ownerId)) {
+			throw new ForbiddenException("You are not the owner of this list");
+		}
+
+		// Cards are removed with the list (CascadeType.ALL + orphanRemoval on KanbanList.cards).
+		kanbanListRepository.delete(list);
+	}
+
 	private UUID currentUserId() {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		if (authentication == null || !(authentication.getPrincipal() instanceof UUID userId)) {
