@@ -10,8 +10,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.ryan.api_kanban.dto.CreateListRequest;
 import fr.ryan.api_kanban.dto.ListResponse;
+import fr.ryan.api_kanban.dto.UpdateListRequest;
 import fr.ryan.api_kanban.entity.KanbanList;
 import fr.ryan.api_kanban.entity.User;
+import fr.ryan.api_kanban.exception.ForbiddenException;
+import fr.ryan.api_kanban.exception.NotFoundException;
 import fr.ryan.api_kanban.exception.UnauthorizedException;
 import fr.ryan.api_kanban.repository.KanbanListRepository;
 import fr.ryan.api_kanban.repository.UserRepository;
@@ -45,6 +48,26 @@ public class ListService {
 		list.setTitle(request.getTitle());
 		list.setPosition(request.getPosition() != null ? request.getPosition() : 0);
 		list.setOwner(owner);
+
+		return ListResponse.from(kanbanListRepository.save(list));
+	}
+
+	@Transactional
+	public ListResponse updateList(UUID id, UpdateListRequest request) {
+		UUID ownerId = currentUserId();
+		KanbanList list = kanbanListRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("List not found"));
+
+		if (!list.getOwnerId().equals(ownerId)) {
+			throw new ForbiddenException("You are not the owner of this list");
+		}
+
+		if (request.getTitle() != null) {
+			list.setTitle(request.getTitle());
+		}
+		if (request.getPosition() != null) {
+			list.setPosition(request.getPosition());
+		}
 
 		return ListResponse.from(kanbanListRepository.save(list));
 	}

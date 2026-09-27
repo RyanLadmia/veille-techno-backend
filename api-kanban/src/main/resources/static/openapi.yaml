@@ -225,8 +225,8 @@ paths:
 
   /lists/{id}:
     patch:
-      tags: [Lists, Non finalisé]
-      summary: "[Non finalisé] Modifier une liste (titre, position)"
+      tags: [Lists]
+      summary: Modifier une liste (titre, position)
       description: Réservé à l'auteur de la liste.
       parameters:
         - $ref: "#/components/parameters/IdParam"
@@ -243,12 +243,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/List"
+        "400":
+          description: Payload invalide (ex. titre vide)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Liste introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
       tags: [Lists, Non finalisé]
       summary: "[Non finalisé] Supprimer une liste"
@@ -504,6 +518,7 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
         position:
           type: integer
 
