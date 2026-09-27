@@ -8,17 +8,23 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import fr.ryan.api_kanban.dto.CreateListRequest;
 import fr.ryan.api_kanban.dto.ListResponse;
+import fr.ryan.api_kanban.entity.KanbanList;
+import fr.ryan.api_kanban.entity.User;
 import fr.ryan.api_kanban.exception.UnauthorizedException;
 import fr.ryan.api_kanban.repository.KanbanListRepository;
+import fr.ryan.api_kanban.repository.UserRepository;
 
 @Service
 public class ListService {
 
 	private final KanbanListRepository kanbanListRepository;
+	private final UserRepository userRepository;
 
-	public ListService(KanbanListRepository kanbanListRepository) {
+	public ListService(KanbanListRepository kanbanListRepository, UserRepository userRepository) {
 		this.kanbanListRepository = kanbanListRepository;
+		this.userRepository = userRepository;
 	}
 
 	@Transactional(readOnly = true)
@@ -27,6 +33,20 @@ public class ListService {
 		return kanbanListRepository.findByOwner_Id(ownerId).stream()
 			.map(ListResponse::from)
 			.toList();
+	}
+
+	@Transactional
+	public ListResponse createList(CreateListRequest request) {
+		UUID ownerId = currentUserId();
+		User owner = userRepository.findById(ownerId)
+			.orElseThrow(UnauthorizedException::new);
+
+		KanbanList list = new KanbanList();
+		list.setTitle(request.getTitle());
+		list.setPosition(request.getPosition() != null ? request.getPosition() : 0);
+		list.setOwner(owner);
+
+		return ListResponse.from(kanbanListRepository.save(list));
 	}
 
 	private UUID currentUserId() {

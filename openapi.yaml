@@ -195,8 +195,8 @@ paths:
               example:
                 message: Unauthorized
     post:
-      tags: [Lists, Non finalisé]
-      summary: "[Non finalisé] Créer une nouvelle liste"
+      tags: [Lists]
+      summary: Créer une nouvelle liste
       requestBody:
         required: true
         content:
@@ -205,13 +205,23 @@ paths:
               $ref: "#/components/schemas/CreateListInput"
       responses:
         "201":
-          description: Liste créée
+          description: Liste créée (ownerId = utilisateur courant)
           content:
             application/json:
               schema:
                 $ref: "#/components/schemas/List"
+        "400":
+          description: Titre vide ou absent
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: Authentification manquante ou token invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /lists/{id}:
     patch:
@@ -485,6 +495,7 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
         position:
           type: integer
 
