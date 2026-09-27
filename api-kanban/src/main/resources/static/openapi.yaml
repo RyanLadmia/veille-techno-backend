@@ -133,8 +133,8 @@ paths:
 
   /users/{id}:
     patch:
-      tags: [Users, Non finalisé]
-      summary: "[Non finalisé] Modifier les informations d'un utilisateur (y compris ses droits)"
+      tags: [Users]
+      summary: Modifier les informations d'un utilisateur (y compris ses droits)
       parameters:
         - $ref: "#/components/parameters/IdParam"
       requestBody:
@@ -150,20 +150,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+        "400":
+          description: Payload invalide (ex. rôle non reconnu)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: >
+            Accès refusé — modification d'un autre profil sans être admin,
+            ou tentative de changer un rôle sans être admin
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Utilisateur introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /lists:
     get:
-      tags: [Lists, Non finalisé]
-      summary: "[Non finalisé] Lister toutes les listes"
+      tags: [Lists]
+      summary: Lister les listes de l'utilisateur connecté
       responses:
         "200":
-          description: Tableau de listes
+          description: Tableau de listes (uniquement celles de l'utilisateur connecté)
           content:
             application/json:
               schema:
@@ -171,7 +187,13 @@ paths:
                 items:
                   $ref: "#/components/schemas/List"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: Authentification manquante ou token invalide
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Unauthorized
     post:
       tags: [Lists, Non finalisé]
       summary: "[Non finalisé] Créer une nouvelle liste"

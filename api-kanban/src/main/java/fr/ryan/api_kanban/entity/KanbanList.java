@@ -19,6 +19,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -47,6 +48,13 @@ public class KanbanList {
 	@OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<Card> cards = new ArrayList<>();
+
+	@PrePersist
+	void onCreate() {
+		if (createdAt == null) {
+			createdAt = Instant.now();
+		}
+	}
 
 	public UUID getId() {
 		return id;
