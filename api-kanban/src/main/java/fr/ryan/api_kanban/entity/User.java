@@ -18,6 +18,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 
 @Entity
@@ -49,6 +50,13 @@ public class User {
 	@OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
 	@JsonIgnore
 	private List<KanbanList> lists = new ArrayList<>();
+
+	@PrePersist
+	void onCreate() {
+		if (createdAt == null) {
+			createdAt = Instant.now();
+		}
+	}
 
 	public UUID getId() {
 		return id;

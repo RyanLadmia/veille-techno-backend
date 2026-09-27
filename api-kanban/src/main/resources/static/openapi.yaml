@@ -14,8 +14,8 @@ info:
   contact:
     name: La Plateforme — Master 1 Développement
 servers:
-  - url: http://localhost:8080/api
-    description: Serveur local de développement
+  - url: /api
+    description: local Swagger
 
 tags:
   - name: Non finalisé
@@ -34,8 +34,8 @@ tags:
 paths:
   /auth/register:
     post:
-      tags: [Auth, Non finalisé]
-      summary: "[Non finalisé] Inscrire un nouvel utilisateur"
+      tags: [Auth]
+      summary: Inscrire un nouvel utilisateur
       security: []
       requestBody:
         required: true
@@ -50,15 +50,36 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+              example:
+                id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                email: "alice@example.com"
+                name: "Alice"
+                role: user
+                createdAt: "2026-01-15T10:00:00Z"
         "400":
-          $ref: "#/components/responses/BadRequest"
+          description: Validation échouée (email invalide, mot de passe trop court, champs manquants)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Validation failed
+                errors:
+                  email: must be a well-formed email address
+                  password: size must be at least 8 character
         "409":
           description: Email déjà utilisé
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Email already used
 
   /auth/login:
     post:
-      tags: [Auth, Non finalisé]
-      summary: "[Non finalisé] Connecter un utilisateur"
+      tags: [Auth]
+      summary: Connecter un utilisateur
       security: []
       requestBody:
         required: true
@@ -73,8 +94,16 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/AuthToken"
+              example:
+                accessToken: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIuLi4iLCJleHAiOjE3MDAwMDAwMDB9.signature
         "401":
-          description: Identifiants invalides
+          description: Identifiants invalides (email inconnu ou mot de passe incorrect — message générique)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Invalid email or password
 
   /users/me:
     get:
@@ -349,8 +378,19 @@ components:
         password:
           type: string
           format: password
+          minLength: 8
         name:
           type: string
+
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        errors:
+          type: object
+          additionalProperties:
+            type: string
 
     LoginInput:
       type: object

@@ -10,4 +10,6 @@ import fr.ryan.api_kanban.entity.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByEmail(String email);
+
+	boolean existsByEmail(String email);
 }
