@@ -107,8 +107,8 @@ paths:
 
   /users/me:
     get:
-      tags: [Users, Non finalisé]
-      summary: "[Non finalisé] Récupérer le profil de l'utilisateur connecté"
+      tags: [Users]
+      summary: Récupérer le profil de l'utilisateur connecté
       responses:
         "200":
           description: Profil utilisateur
@@ -116,8 +116,20 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/User"
+              example:
+                id: "3fa85f64-5717-4562-b3fc-2c963f66afa6"
+                email: "alice@example.com"
+                name: "Alice"
+                role: user
+                createdAt: "2026-01-15T10:00:00Z"
         "401":
-          $ref: "#/components/responses/Unauthorized"
+          description: Authentification manquante ou token invalide/expiré
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+              example:
+                message: Unauthorized
 
   /users/{id}:
     patch:
