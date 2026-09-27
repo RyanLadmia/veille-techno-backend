@@ -1,0 +1,15 @@
+target/
+.git/
+.idea/
+.vscode/
+*.imlnode_modules
+dist
+.env
+.env.*
+npm-debug.log
+.DS_Store
+target/
+.git/
+.idea/
+.vscode/
+*.iml

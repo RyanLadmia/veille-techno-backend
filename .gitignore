@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+
+api-kanban/target/
+.DS_Store

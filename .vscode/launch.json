@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-ApiKanbanApplication<api-kanban>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "fr.ryan.api_kanban.ApiKanbanApplication",
+            "projectName": "api-kanban",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
