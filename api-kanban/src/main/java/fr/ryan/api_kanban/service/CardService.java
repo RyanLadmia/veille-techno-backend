@@ -50,6 +50,19 @@ public class CardService {
 		return CardResponse.from(cardRepository.save(card));
 	}
 
+	@Transactional(readOnly = true)
+	public CardResponse getCard(UUID id) {
+		Card card = cardRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("Card not found"));
+
+		UUID ownerId = currentUserId();
+		if (!card.getList().getOwnerId().equals(ownerId)) {
+			throw new ForbiddenException("You are not the owner of this card's list");
+		}
+
+		return CardResponse.from(card);
+	}
+
 	private KanbanList requireOwnedList(UUID listId) {
 		UUID ownerId = currentUserId();
 		KanbanList list = kanbanListRepository.findById(listId)
