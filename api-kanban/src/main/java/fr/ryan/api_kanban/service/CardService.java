@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import fr.ryan.api_kanban.dto.CardResponse;
 import fr.ryan.api_kanban.dto.CreateCardRequest;
+import fr.ryan.api_kanban.dto.UpdateCardRequest;
 import fr.ryan.api_kanban.entity.Card;
 import fr.ryan.api_kanban.entity.KanbanList;
 import fr.ryan.api_kanban.exception.ForbiddenException;
@@ -61,6 +62,51 @@ public class CardService {
 		}
 
 		return CardResponse.from(card);
+	}
+
+	@Transactional
+	public CardResponse updateCard(UUID id, UpdateCardRequest request) {
+		Card card = cardRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("Card not found"));
+
+		UUID ownerId = currentUserId();
+		if (!card.getList().getOwnerId().equals(ownerId)) {
+			throw new ForbiddenException("You are not the owner of this card's list");
+		}
+
+		if (request.getListId() != null && !request.getListId().equals(card.getListId())) {
+			KanbanList targetList = kanbanListRepository.findById(request.getListId())
+				.orElseThrow(() -> new NotFoundException("List not found"));
+			if (!targetList.getOwnerId().equals(ownerId)) {
+				throw new ForbiddenException("You are not the owner of the target list");
+			}
+			card.setList(targetList);
+		}
+
+		if (request.getTitle() != null) {
+			card.setTitle(request.getTitle());
+		}
+		if (request.getDescription() != null) {
+			card.setDescription(request.getDescription());
+		}
+		if (request.getPosition() != null) {
+			card.setPosition(request.getPosition());
+		}
+
+		return CardResponse.from(cardRepository.save(card));
+	}
+
+	@Transactional
+	public void deleteCard(UUID id) {
+		Card card = cardRepository.findById(id)
+			.orElseThrow(() -> new NotFoundException("Card not found"));
+
+		UUID ownerId = currentUserId();
+		if (!card.getList().getOwnerId().equals(ownerId)) {
+			throw new ForbiddenException("You are not the owner of this card's list");
+		}
+
+		cardRepository.delete(card);
 	}
 
 	private KanbanList requireOwnedList(UUID listId) {

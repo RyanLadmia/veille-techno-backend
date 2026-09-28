@@ -398,8 +398,8 @@ paths:
               schema:
                 $ref: "#/components/schemas/ErrorResponse"
     patch:
-      tags: [Cards, Non finalisé]
-      summary: "[Non finalisé] Modifier une carte (titre, description, position, liste)"
+      tags: [Cards]
+      summary: Modifier une carte (titre, description, position, liste)
       description: >
         Réservé à l'auteur de la liste parente. En cas de déplacement (changement de `listId`),
         l'utilisateur doit aussi être l'auteur de la liste cible, sinon 403.
@@ -418,15 +418,29 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
+        "400":
+          description: Payload invalide (ex. titre vide)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste parente ou liste cible appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Carte ou liste cible introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     delete:
-      tags: [Cards, Non finalisé]
-      summary: "[Non finalisé] Supprimer une carte"
+      tags: [Cards]
+      summary: Supprimer une carte
       description: Réservé à l'auteur de la liste parente.
       parameters:
         - $ref: "#/components/parameters/IdParam"
@@ -436,9 +450,17 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste parente appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Carte introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
 components:
   securitySchemes:
@@ -596,12 +618,14 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
         description:
           type: string
         position:
           type: integer
         listId:
           type: string
+          format: uuid
 
     Card:
       type: object
