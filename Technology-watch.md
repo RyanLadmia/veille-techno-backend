@@ -69,6 +69,5 @@ MVC / layered = Retenu (KISS)
 Méthode : 
 TDD ? => Envisagé mais rejetée due à la méconaissance de Java et Spring Boot
 
-
 Pour le projet 
 swagger : dependance springdoc-openapi-starter-webmvc-ui 3.0.2
