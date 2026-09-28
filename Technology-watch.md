@@ -4,7 +4,7 @@
 
 ### NestJS
 
-NestJS is a TypeScript framework for Node.js, strongly inspired by Angular and Spring. It uses modules, dependency injection, controllers, providers, guards and interceptors. It uses Express or Fastify under the hood.
+NestJS is a TypeScript framework for Node.js, strongly inspired by Angular and Spring. It uses modules, dependency injection, controllers, providers, guards and interceptors. It uses Express under the hood.
 
 **Advantages:**
 
@@ -12,17 +12,16 @@ NestJS is a TypeScript framework for Node.js, strongly inspired by Angular and S
 - Fast to develop if the team already knows JavaScript/TypeScript.
 - Large npm ecosystem.
 - Good for REST APIs and real-time applications.
-- Its architecture is easy to organise for a large project.
+- Its architecture is easy to organise for a large project and has a great freedom.
 
 **Disadvantages:**
 
-- Node.js uses a single event loop, so CPU-heavy tasks can require workers or another service.
+- Node.js uses a single event loop, so CPU-heavy tasks can require workers or another service (mono thread).
 - It has less experience than Java in large enterprise projects.
-- The quality of npm packages can vary.
+- The quality of npm packages can vary (and vulnerabilities).
 
 For a small team that already knows TypeScript, NestJS can make development faster. The learning curve is also easier for me because I already used NestJS in previous projects.
 
-**Sources:** NestJS documentation; Better Stack — NestJS vs Spring Boot; Happycoding — NestJS vs Spring Boot 2026.
 
 ---
 
@@ -49,7 +48,6 @@ For a Kanban API with authentication, ownership rules and CRUD, Symfony could be
 
 I already had some experience with Symfony. I found its architecture interesting, especially Doctrine, but I was more comfortable with NestJS.
 
-**Sources:** Symfony documentation; ArKoder — shared architecture across Spring / Symfony / NestJS.
 
 ---
 
@@ -78,7 +76,6 @@ Once these concepts were understood, development became easier.
 
 Spring Boot is well suited to this project because it provides the tools needed for JWT authentication, access control, database management, validation and testing.
 
-**Sources:** Spring documentation; Spring Boot documentation; endoflife.date — Spring Boot.
 
 ---
 
@@ -98,6 +95,8 @@ Spring Boot is also well suited to the project's needs:
 - Access control
 - Data validation
 - Testing
+
+If the project is intended to grow and become more complex, then Java and Spring Boot are the most logical choices.
 
 During the first days of the project, the main difficulty was learning Java and Spring Boot at the same time. I also had to understand Maven, Spring beans, dependency injection and the Spring project structure.
 
@@ -119,7 +118,6 @@ I chose **JDK 25** for this project.
 
 The project uses **Spring Boot 4.1.1** with Java 25.
 
-**Sources:** Oracle Java documentation; Spring Boot documentation.
 
 ---
 
@@ -176,7 +174,7 @@ For me, **NestJS was the easiest** because I already knew TypeScript and had use
 
 Symfony was also easier than Spring Boot because I already had some experience with PHP and Symfony.
 
-Spring Boot was the most challenging because I had to learn **Java and Spring Boot at the same time**.
+Spring Boot was the most challenging.
 
 The main difficulties were:
 
@@ -188,8 +186,9 @@ The main difficulties were:
 - Understanding how Spring manages the application.
 
 My previous knowledge of NestJS helped me understand some Spring concepts because the architectures are similar.
+I also found similarities with Symfony and Doctrine, particularly in the declaration of getters and setters.
 
-For a team, the onboarding time depends strongly on the developers' previous experience. A Java team would probably start much faster with Spring Boot, while a TypeScript team would probably start faster with NestJS.
+For a team, the learning curve depends strongly on the developers' previous experience. A Java team would probably start much faster with Spring Boot, while a TypeScript team would probably start faster with NestJS.
 
 After the first learning period, Spring Boot became easier to use because the project follows standard conventions.
 
@@ -204,8 +203,8 @@ The main parts are:
 - **Controller:** receives HTTP requests and returns HTTP responses.
 - **Service:** contains the application's business logic.
 - **Repository:** communicates with the database.
-- **Entity:** represents data stored in the database.
-- **DTO:** defines the data received or returned by the API.
+- **Entity:** represents tables in the database.
+- **DTO:** defines the contract of the data received or returned by the API.
 
 I also use **Dependency Injection**. Spring creates and injects the required objects instead of creating them manually.
 
@@ -229,7 +228,7 @@ The project also uses:
 - Validation for incoming data.
 - HTTP status codes to communicate the result of requests.
 
-I chose a classic MVC architecture instead of Clean Architecture or Hexagonal Architecture because the project is relatively small and my main goal is to learn Java and Spring Boot.
+I chose a classic MVC architecture instead of Clean Architecture or Hexagonal Architecture because the project is relatively small and my main goal is to learn Java and Spring Boot (KISS and YAGNI).
 
 ---
 
@@ -237,14 +236,7 @@ I chose a classic MVC architecture instead of Clean Architecture or Hexagonal Ar
 
 Spring Boot is well suited to professional backend applications.
 
-For this project, it provides most of the tools I need without having to build them myself:
-
-- REST API
-- Authentication and security
-- Database access
-- Validation
-- Testing
-- Dependency Injection
+For this project, it provides most of the tools I need without having to build them myself.
 
 The Java ecosystem is also mature and has been used in professional applications for many years.
 
@@ -268,7 +260,7 @@ For maintenance, I would:
 
 - Keep Java and Spring Boot versions updated.
 - Check Spring Boot release notes before updating.
-- Update dependencies regularly.
+- Update dependencies 
 - Keep tests updated when the code changes.
 - Use automated tests for important business rules.
 - Keep the code and API documentation up to date.
@@ -280,6 +272,11 @@ For example, Spring Boot, JPA and Hibernate are useful for this project, but the
 
 The main risk is that Spring has a large ecosystem. It is therefore important to understand which dependencies are really needed and to keep them updated.
 
+Also, Java itself and Spring Boot have a main update every six months. So I would make sure to user the LTS.
+Maven is updated much more often. It takes years for a new update.
+
+Therefore, we need to stay informed and check for new stable and reliable versions at least every six months, or once a year.
+
 ---
 
 ## 7. Eco-design
@@ -288,9 +285,7 @@ Eco-design was not the main factor when choosing the framework.
 
 The main objective of the project was to learn Java and Spring Boot and compare backend technologies.
 
-However, I still considered the environmental impact of the application.
-
-Some choices can help reduce resource consumption:
+I have not yet implemented protocols to ensure eco-responsibility, but if the application were to become more complex or evolve significantly, we could implement the following optimizations:
 
 - Keep the API simple.
 - Avoid unnecessary requests.
@@ -298,7 +293,7 @@ Some choices can help reduce resource consumption:
 - Use pagination for large amounts of data.
 - Optimise database queries.
 - Avoid unnecessary dependencies.
-- Use Docker to keep the deployment reproducible.
+- Keep using Docker to keep the deployment reproducible.
 - Monitor resource consumption when the application is deployed.
 
 Spring Boot can use more memory than a small Node.js application, especially with a JVM application. This is therefore one of the points to consider when choosing the technology for a very small application.
@@ -319,13 +314,3 @@ The three frameworks also use similar architectural ideas:
 - ORM tools simplify database access.
 - Validation protects the API.
 - Middleware, filters, guards or interceptors can control requests.
-
-The main difference is the ecosystem and the programming language.
-
-**NestJS** is very interesting for a TypeScript team because the same language can be used on the frontend and backend.
-
-**Symfony** is a strong choice for a PHP team and has a mature ecosystem for web applications, CMS and e-commerce.
-
-**Spring Boot** is strongly connected to the Java ecosystem and provides a mature environment for large and long-term backend applications.
-
-For this project, I chose Spring Boot because I wanted to learn Java and discover a new backend ecosystem. My previous experience with NestJS and Symfony also helped me understand Spring concepts faster.
