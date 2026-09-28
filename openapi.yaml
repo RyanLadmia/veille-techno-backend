@@ -2,26 +2,13 @@ openapi: 3.0.3
 info:
   title: Kanban Board API
   description: >
-    Contrat de référence pour l'exercice de veille technologique backend (NestJS / Symfony / Spring Boot).
-    Ce contrat est identique quel que soit le framework choisi : c'est ce qui permet de comparer les
-    implémentations à la fin de l'exercice. Importez ce fichier dans Swagger Editor, Postman ou Insomnia
-    pour explorer et tester les routes directement.
-
-    Les opérations marquées [Non finalisé] (tag « Non finalisé ») ne sont pas encore implémentées
-    dans le serveur : elles figurent dans la documentation pour exposer le contrat cible, pas comme
-    API livrée. Un appel « Try it out » peut donc échouer (ex. 404) tant que la route n'est pas finalisée.
+    Contrat de référence pour l'api-kanban
   version: "1.0.0"
-  contact:
-    name: La Plateforme — Master 1 Développement
 servers:
   - url: /api
     description: local Swagger
 
 tags:
-  - name: Non finalisé
-    description: >
-      Opération présente dans le contrat mais pas encore livrée par le serveur.
-      Retirer ce tag (et le préfixe [Non finalisé] du summary) lorsque la route est implémentée.
   - name: Auth
     description: Inscription et connexion
   - name: Users

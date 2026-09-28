@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -32,7 +31,7 @@ public class SecurityConfig {
 	@Bean
 	UserDetailsService userDetailsService() {
 		return username -> {
-			throw new UsernameNotFoundException("User lookup is not used yet");
+			throw new UsernameNotFoundException("User lookup is not used");
 		};
 	}
 
@@ -44,12 +43,7 @@ public class SecurityConfig {
 			.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
 			.authorizeHttpRequests(auth -> auth
 				.requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
-				.requestMatchers(
-					"/api",
-					"/swagger-ui/**",
-					"/v3/api-docs/**",
-					"/openapi.yaml"
-				).permitAll()
+				.requestMatchers("/api", "/swagger-ui/**", "/v3/api-docs/**", "/openapi.yaml").permitAll()
 				.requestMatchers(HttpMethod.GET, "/").permitAll()
 				.anyRequest().authenticated()
 			)
@@ -59,9 +53,6 @@ public class SecurityConfig {
 				response.setContentType(MediaType.APPLICATION_JSON_VALUE);
 				response.getWriter().write("{\"message\":\"Unauthorized\"}");
 			}))
-			.httpBasic(httpBasic -> httpBasic.disable())
-			.formLogin(form -> form.disable())
-			.headers(Customizer.withDefaults())
 			.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
