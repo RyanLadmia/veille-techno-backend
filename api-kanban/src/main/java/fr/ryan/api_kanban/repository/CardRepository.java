@@ -9,5 +9,5 @@ import fr.ryan.api_kanban.entity.Card;
 
 public interface CardRepository extends JpaRepository<Card, UUID> {
 
-	List<Card> findByList_Id(UUID listId);
+	List<Card> findByList_IdOrderByPositionAsc(UUID listId);
 }

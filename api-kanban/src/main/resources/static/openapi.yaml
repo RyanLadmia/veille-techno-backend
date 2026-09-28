@@ -291,15 +291,16 @@ paths:
 
   /lists/{listId}/cards:
     get:
-      tags: [Cards, Non finalisé]
-      summary: "[Non finalisé] Lister les cartes d'une liste"
-      description: Réservé à l'auteur de la liste.
+      tags: [Cards]
+      summary: Lister les cartes d'une liste
+      description: Réservé à l'auteur de la liste. Les cartes sont triées par position croissante.
       parameters:
         - name: listId
           in: path
           required: true
           schema:
             type: string
+            format: uuid
       responses:
         "200":
           description: Tableau de cartes
@@ -312,12 +313,20 @@ paths:
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Liste introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
     post:
-      tags: [Cards, Non finalisé]
-      summary: "[Non finalisé] Créer une nouvelle carte dans une liste"
+      tags: [Cards]
+      summary: Créer une nouvelle carte dans une liste
       description: Réservé à l'auteur de la liste.
       parameters:
         - name: listId
@@ -325,6 +334,7 @@ paths:
           required: true
           schema:
             type: string
+            format: uuid
       requestBody:
         required: true
         content:
@@ -338,12 +348,26 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Card"
+        "400":
+          description: Payload invalide (ex. titre manquant)
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "401":
           $ref: "#/components/responses/Unauthorized"
         "403":
-          $ref: "#/components/responses/Forbidden"
+          description: Liste appartenant à un autre utilisateur
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
         "404":
-          $ref: "#/components/responses/NotFound"
+          description: Liste introuvable
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
 
   /cards/{id}:
     get:
@@ -553,6 +577,7 @@ components:
       properties:
         title:
           type: string
+          minLength: 1
         description:
           type: string
         position:
